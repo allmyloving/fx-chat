@@ -36,7 +36,7 @@ public class Controller {
 
     private MessageContainer messages;
 
-    private User currentUser;
+    private User currentUser = new User("john doe", "asdf");
 
     private void showModal() {
         Dialog<Pair<String, String>> dialog = new Dialog<>();
@@ -95,11 +95,11 @@ public class Controller {
 
     @FXML
     public void initialize() {
-        showModal();
+//        showModal();
         try {
             clientSocket = new Socket("localhost", Settings.PORT_NUM);
             out = new PrintWriter(clientSocket.getOutputStream(), true);
-//            in = new Scanner(clientSocket.getInputStream());
+            in = new Scanner(clientSocket.getInputStream());
         } catch (IOException e) {
             System.out.println(String.format("IOException occurred: %s", e.getMessage()));
         }
@@ -112,5 +112,8 @@ public class Controller {
         messageText.clear();
 
         out.println(String.format("%s: %s", currentUser.getLogin(), text));
+        while (in.hasNextLine()) {
+            System.out.println(String.format("Read %s", in.nextLine()));
+        }
     }
 }
